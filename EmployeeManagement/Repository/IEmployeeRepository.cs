@@ -6,5 +6,8 @@ namespace EmployeeManagement.Repository
     {
         Task<IEnumerable<Employee>> GetAllAsync();
         Task<Employee> GetByIdAsync(int id);
+        Task UpdateEmployeeAsync(Employee employee);
+        Task DeleteByIdAsync(int id);   
+        Task AddEmployeeAsync(Employee employee);
     }
 }
