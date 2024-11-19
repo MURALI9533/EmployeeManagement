@@ -1,5 +1,6 @@
 using EmployeeManagement.Data;
 using EmployeeManagement.Models;
+using EmployeeManagement.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
@@ -19,7 +20,23 @@ builder.Services.AddCors(options =>
 
 }
     );
+// Registers the EmployeeRepository as the implementation of IEmployeeRepository with a scoped lifetime.
+// A new instance of EmployeeRepository will be created once per HTTP request.
+builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 var app = builder.Build();
-app.MapGet("/", () => "Hello World!");
-
+if(app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI(
+        c =>
+        {
+            c.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1");
+            c.RoutePrefix = string.Empty;
+        }
+        );
+}
+app.MapControllers();
 app.Run();
