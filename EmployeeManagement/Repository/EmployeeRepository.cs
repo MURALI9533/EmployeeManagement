@@ -1,5 +1,6 @@
 ﻿using EmployeeManagement.Data;
 using EmployeeManagement.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace EmployeeManagement.Repository
 {
@@ -9,29 +10,37 @@ namespace EmployeeManagement.Repository
         public EmployeeRepository(AppDBContext context) { 
             _dbContext = context;
         }
-        public Task AddEmployeeAsync(Employee employee)
+        public async Task AddEmployeeAsync(Employee employee)
         {
-            throw new NotImplementedException();
+            await _dbContext.Employees.AddAsync(employee);
+            await _dbContext.SaveChangesAsync();
         }
 
-        public Task DeleteByIdAsync(int id)
+        public async Task DeleteByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            var employeeObj= await _dbContext.Employees.FindAsync(id);
+            if (employeeObj != null)
+            {
+                _dbContext.Employees.Remove(employeeObj);
+            }
+            //_dbContext.Employees.
+           await _dbContext.SaveChangesAsync();
         }
 
-        public Task<IEnumerable<Employee>> GetAllAsync()
+        public async Task<IEnumerable<Employee>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _dbContext.Employees.ToListAsync();
         }
 
-        public Task<Employee> GetByIdAsync(int id)
+        public async Task<Employee?> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _dbContext.Employees.FindAsync(id);
         }
 
-        public Task UpdateEmployeeAsync(Employee employee)
+        public async Task UpdateEmployeeAsync(Employee employee)
         {
-            throw new NotImplementedException();
+            _dbContext.Update(employee);
+             await _dbContext.SaveChangesAsync();
         }
     }
 }
